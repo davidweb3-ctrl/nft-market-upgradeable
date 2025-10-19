@@ -1,0 +1,413 @@
+Compiling 1 files with Solc 0.8.25
+Solc 0.8.25 finished in 762.43ms
+Compiler run successful with warnings:
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/NFTMarketUpgradeable.sol:369:9:
+    |
+369 |         address operator,
+    |         ^^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/NFTMarketUpgradeable.sol:370:9:
+    |
+370 |         address from,
+    |         ^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/NFTMarketUpgradeable.sol:371:9:
+    |
+371 |         uint256 tokenId,
+    |         ^^^^^^^^^^^^^^^
+
+Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+   --> src/NFTMarketUpgradeable.sol:372:9:
+    |
+372 |         bytes calldata data
+    |         ^^^^^^^^^^^^^^^^^^^
+
+Warning (2072): Unused local variable.
+   --> test/NFTMarketUpgradeable.t.sol:118:9:
+    |
+118 |         bytes32 listingId = keccak256(abi.encodePacked(
+    |         ^^^^^^^^^^^^^^^^^
+
+
+Ran 21 tests for test/NFTMarketUpgradeable.t.sol:NFTMarketUpgradeableTest
+[PASS] test_BuyNFT() (gas: 347964)
+[PASS] test_BuyNFT_ExcessPayment() (gas: 345646)
+[PASS] test_BuyNFT_InsufficientPayment() (gas: 292502)
+[PASS] test_BuyNFT_ListingNotActive() (gas: 27832)
+[PASS] test_DelistNFT() (gas: 243144)
+[PASS] test_DelistNFT_NotLister() (gas: 285535)
+[PASS] test_Deployment() (gas: 34326)
+[PASS] test_EmergencyWithdraw() (gas: 47522)
+[PASS] test_FullMarketWorkflow() (gas: 345116)
+[PASS] test_GetMarketStats() (gas: 276652)
+[PASS] test_ListNFT() (gas: 284623)
+[PASS] test_ListNFT_NotApproved() (gas: 43813)
+[PASS] test_ListNFT_NotOwner() (gas: 32629)
+[PASS] test_ListNFT_PriceTooHigh() (gas: 26490)
+[PASS] test_ListNFT_PriceTooLow() (gas: 24420)
+[PASS] test_MultipleListings() (gas: 713971)
+[PASS] test_PauseUnpause() (gas: 288460)
+[PASS] test_SupportsInterface() (gas: 6482)
+[PASS] test_UpdateMarketParams() (gas: 44128)
+[PASS] test_UpdateMarketParams_NonOwner() (gas: 17326)
+[PASS] test_UpgradeAuthorization() (gas: 17234)
+Suite result: ok. 21 passed; 0 failed; 0 skipped; finished in 7.00ms (2.11ms CPU time)
+
+Ran 9 tests for test/NFTMarketUpgradeableV2.t.sol:NFTMarketUpgradeableV2Test
+[FAIL: UUPSUnauthorizedCallContext()] test_FullV2Workflow() (gas: 4109015)
+Traces:
+  [4109015] NFTMarketUpgradeableV2Test::test_FullV2Workflow()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_GetSignatureHash() (gas: 4109016)
+Traces:
+  [4109016] NFTMarketUpgradeableV2Test::test_GetSignatureHash()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_IsSignatureUsed() (gas: 4109015)
+Traces:
+  [4109015] NFTMarketUpgradeableV2Test::test_IsSignatureUsed()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature() (gas: 4108995)
+Traces:
+  [4108995] NFTMarketUpgradeableV2Test::test_ListWithSignature()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_InvalidSignature() (gas: 4109037)
+Traces:
+  [4109037] NFTMarketUpgradeableV2Test::test_ListWithSignature_InvalidSignature()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_PriceOutOfRange() (gas: 4109037)
+Traces:
+  [4109037] NFTMarketUpgradeableV2Test::test_ListWithSignature_PriceOutOfRange()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_SignatureExpired() (gas: 4108993)
+Traces:
+  [4108993] NFTMarketUpgradeableV2Test::test_ListWithSignature_SignatureExpired()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_SignatureReuse() (gas: 4109014)
+Traces:
+  [4109014] NFTMarketUpgradeableV2Test::test_ListWithSignature_SignatureReuse()
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+[FAIL: UUPSUnauthorizedCallContext()] test_UpgradeToV2() (gas: 4384526)
+Traces:
+  [4384526] NFTMarketUpgradeableV2Test::test_UpgradeToV2()
+    ├─ [0] VM::prank(seller: [0xDFa97bfe5d2b2E8169b194eAA78Fbb793346B174])
+    │   └─ ← [Return]
+    ├─ [268428] NFTMarketUpgradeable::listNFT(MyNFTUpgradeable: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 1, 1000000000000000000 [1e18])
+    │   ├─ [3082] MyNFTUpgradeable::ownerOf(1) [staticcall]
+    │   │   └─ ← [Return] seller: [0xDFa97bfe5d2b2E8169b194eAA78Fbb793346B174]
+    │   ├─ [3318] MyNFTUpgradeable::isApprovedForAll(seller: [0xDFa97bfe5d2b2E8169b194eAA78Fbb793346B174], NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b]) [staticcall]
+    │   │   └─ ← [Return] true
+    │   ├─ [40150] MyNFTUpgradeable::safeTransferFrom(seller: [0xDFa97bfe5d2b2E8169b194eAA78Fbb793346B174], NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], 1)
+    │   │   ├─ emit Transfer(from: seller: [0xDFa97bfe5d2b2E8169b194eAA78Fbb793346B174], to: NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], tokenId: 1)
+    │   │   ├─ [1372] NFTMarketUpgradeable::onERC721Received(NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], seller: [0xDFa97bfe5d2b2E8169b194eAA78Fbb793346B174], 1, 0x)
+    │   │   │   └─ ← [Return] 0x150b7a02
+    │   │   └─ ← [Stop]
+    │   ├─ emit NFTListed(listingId: 0x5663b7340c3a13a233b8d95ce7bc056dd9a2c1171d88967706bbecb02d32b61a, seller: seller: [0xDFa97bfe5d2b2E8169b194eAA78Fbb793346B174], nftContract: MyNFTUpgradeable: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], tokenId: 1, price: 1000000000000000000 [1e18], timestamp: 1)
+    │   └─ ← [Stop]
+    ├─ [494] NFTMarketUpgradeable::activeListingsCount() [staticcall]
+    │   └─ ← [Return] 1
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+Suite result: FAILED. 0 passed; 9 failed; 0 skipped; finished in 6.98ms (1.53ms CPU time)
+
+Ran 19 tests for test/MyNFTUpgradeable.t.sol:MyNFTUpgradeableTest
+[PASS] test_BatchMint() (gas: 202386)
+[PASS] test_BatchMintExceedsMaxSupply() (gas: 28293)
+[PASS] test_Deployment() (gas: 37303)
+[PASS] test_FullWorkflow() (gas: 220895)
+[PASS] test_InitializationOnlyOnce() (gas: 16890)
+[PASS] test_MaxSupplyBoundary() (gas: 87261)
+[PASS] test_MintByNonOwner() (gas: 16380)
+[PASS] test_MintByOwner() (gas: 84577)
+[PASS] test_MintExceedsMaxSupply() (gas: 142052)
+[PASS] test_MintToZeroAddress() (gas: 14484)
+[PASS] test_SetBaseURI() (gas: 101043)
+[PASS] test_SetBaseURINonOwner() (gas: 14606)
+[PASS] test_SetMaxSupply() (gas: 25194)
+[PASS] test_SetMaxSupplyNonOwner() (gas: 14044)
+[PASS] test_SetMaxSupplyTooLow() (gas: 188851)
+[PASS] test_SupportsInterface() (gas: 10318)
+[PASS] test_TokenURI() (gas: 87918)
+[PASS] test_UpgradeAuthorization() (gas: 17257)
+[PASS] test_ZeroAmountBatchMint() (gas: 16861)
+Suite result: ok. 19 passed; 0 failed; 0 skipped; finished in 6.99ms (3.67ms CPU time)
+
+Ran 1 test for test/UpgradeFlowTest.t.sol:UpgradeFlowTest
+[FAIL: UUPSUnauthorizedCallContext()] test_CompleteUpgradeFlow() (gas: 4542271)
+Logs:
+  === Setting up upgrade flow test ===
+  Owner: 0x7c8999dC9a822c1f0Df42023113EDB4FDd543266
+  Seller: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+  Buyer: 0x0fF93eDfa7FB7Ad5E962E4C0EdB9207C03a0fe02
+  Fee Recipient: 0xa32c0203D5F9Fcfe1b2A359e5628cb5a22001bA7
+  NFT contract deployed at: 0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f
+  V1 Market contract deployed at: 0x2e234DAe75C793f67A35089C9d99245E1C58470b
+  V1 Version: 1.0.0
+  NFT minted to seller, tokenId: 1
+  Seller approved market contract
+  Buyer funded with 10 ETH
+  
+=== Starting Complete Upgrade Flow Test ===
+  
+--- Phase 1: Testing V1 Functionality ---
+  [OK] V1 initial state verified
+  
+1.2 Listing NFT on V1...
+  [OK] NFT listed on V1 successfully
+  [OK] Listing ID retrieved: 0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b
+  
+1.3 Purchasing NFT on V1...
+  [OK] NFT purchased on V1 successfully
+    - Seller received: 0 ETH
+    - Fee recipient received: 0 ETH
+  
+--- Phase 2: Upgrading to V2 ---
+  
+2.1 Deploying V2 contract...
+  V2 contract deployed at: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  
+2.2 Upgrading V1 to V2...
+
+Traces:
+  [4542271] UpgradeFlowTest::test_CompleteUpgradeFlow()
+    ├─ [0] console::log("\n=== Starting Complete Upgrade Flow Test ===") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("\n--- Phase 1: Testing V1 Functionality ---") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [704] NFTMarketUpgradeable::version() [staticcall]
+    │   └─ ← [Return] "1.0.0"
+    ├─ [0] VM::assertEq("1.0.0", "1.0.0", "V1 version should be 1.0.0") [staticcall]
+    │   └─ ← [Return]
+    ├─ [2494] NFTMarketUpgradeable::activeListingsCount() [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [2491] NFTMarketUpgradeable::feePercentage() [staticcall]
+    │   └─ ← [Return] 250
+    ├─ [0] console::log("[OK] V1 initial state verified") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("\n1.2 Listing NFT on V1...") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266)
+    │   └─ ← [Return]
+    ├─ [266428] NFTMarketUpgradeable::listNFT(MyNFTUpgradeable: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], 1, 1000000000000000000 [1e18])
+    │   ├─ [3082] MyNFTUpgradeable::ownerOf(1) [staticcall]
+    │   │   └─ ← [Return] 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+    │   ├─ [3318] MyNFTUpgradeable::isApprovedForAll(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b]) [staticcall]
+    │   │   └─ ← [Return] true
+    │   ├─ [40150] MyNFTUpgradeable::safeTransferFrom(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], 1)
+    │   │   ├─ emit Transfer(from: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, to: NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], tokenId: 1)
+    │   │   ├─ [1372] NFTMarketUpgradeable::onERC721Received(NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, 1, 0x)
+    │   │   │   └─ ← [Return] 0x150b7a02
+    │   │   └─ ← [Stop]
+    │   ├─ emit NFTListed(listingId: 0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b, seller: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, nftContract: MyNFTUpgradeable: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], tokenId: 1, price: 1000000000000000000 [1e18], timestamp: 1)
+    │   └─ ← [Stop]
+    ├─ [494] NFTMarketUpgradeable::activeListingsCount() [staticcall]
+    │   └─ ← [Return] 1
+    ├─ [1082] MyNFTUpgradeable::ownerOf(1) [staticcall]
+    │   └─ ← [Return] NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b]
+    ├─ [0] console::log("[OK] NFT listed on V1 successfully") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [1794] NFTMarketUpgradeable::getUserListings(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266) [staticcall]
+    │   └─ ← [Return] [0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b]
+    ├─ [0] VM::toString(0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b) [staticcall]
+    │   └─ ← [Return] "0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b"
+    ├─ [0] console::log("[OK] Listing ID retrieved:", "0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("\n1.3 Purchasing NFT on V1...") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(buyer: [0x0fF93eDfa7FB7Ad5E962E4C0EdB9207C03a0fe02])
+    │   └─ ← [Return]
+    ├─ [105334] NFTMarketUpgradeable::buyNFT{value: 1000000000000000000}(0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b)
+    │   ├─ [27396] MyNFTUpgradeable::safeTransferFrom(NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], buyer: [0x0fF93eDfa7FB7Ad5E962E4C0EdB9207C03a0fe02], 1)
+    │   │   ├─ emit Transfer(from: NFTMarketUpgradeable: [0x2e234DAe75C793f67A35089C9d99245E1C58470b], to: buyer: [0x0fF93eDfa7FB7Ad5E962E4C0EdB9207C03a0fe02], tokenId: 1)
+    │   │   └─ ← [Stop]
+    │   ├─ [0] feeRecipient::fallback{value: 25000000000000000}()
+    │   │   └─ ← [Stop]
+    │   ├─ [0] 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266::fallback{value: 975000000000000000}()
+    │   │   └─ ← [Stop]
+    │   ├─ emit NFTPurchased(listingId: 0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b, buyer: buyer: [0x0fF93eDfa7FB7Ad5E962E4C0EdB9207C03a0fe02], seller: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266, nftContract: MyNFTUpgradeable: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f], tokenId: 1, price: 1000000000000000000 [1e18], fee: 25000000000000000 [2.5e16], timestamp: 1)
+    │   └─ ← [Stop]
+    ├─ [1082] MyNFTUpgradeable::ownerOf(1) [staticcall]
+    │   └─ ← [Return] buyer: [0x0fF93eDfa7FB7Ad5E962E4C0EdB9207C03a0fe02]
+    ├─ [494] NFTMarketUpgradeable::activeListingsCount() [staticcall]
+    │   └─ ← [Return] 0
+    ├─ [0] console::log("[OK] NFT purchased on V1 successfully") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("  - Seller received:", 0, "ETH") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("  - Fee recipient received:", 0, "ETH") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("\n--- Phase 2: Upgrading to V2 ---") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("\n2.1 Deploying V2 contract...") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [4036679] → new NFTMarketUpgradeableV2@0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+    │   └─ ← [Return] 20160 bytes of code
+    ├─ [0] console::log("V2 contract deployed at:", NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a]) [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] console::log("\n2.2 Upgrading V1 to V2...") [staticcall]
+    │   └─ ← [Stop]
+    ├─ [0] VM::prank(owner: [0x7c8999dC9a822c1f0Df42023113EDB4FDd543266])
+    │   └─ ← [Return]
+    ├─ [1284] NFTMarketUpgradeable::upgradeToAndCall(NFTMarketUpgradeableV2: [0xF62849F9A0B5Bf2913b396098F7c7019b51A820a], 0x)
+    │   └─ ← [Revert] UUPSUnauthorizedCallContext()
+    └─ ← [Revert] UUPSUnauthorizedCallContext()
+
+Suite result: FAILED. 0 passed; 1 failed; 0 skipped; finished in 7.06ms (1.08ms CPU time)
+
+Ran 2 tests for test/Counter.t.sol:CounterTest
+[PASS] testFuzz_SetNumber(uint256) (runs: 256, μ: 28900, ~: 29289)
+[PASS] test_Increment() (gas: 28784)
+Suite result: ok. 2 passed; 0 failed; 0 skipped; finished in 8.98ms (6.46ms CPU time)
+
+Ran 1 test for test/UpgradeCompatibilityTest.t.sol:UpgradeCompatibilityTest
+[PASS] test_V1AndV2Compatibility() (gas: 998306)
+Logs:
+  === Setting up upgrade compatibility test ===
+  Owner: 0x7c8999dC9a822c1f0Df42023113EDB4FDd543266
+  Seller: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+  Buyer: 0x0fF93eDfa7FB7Ad5E962E4C0EdB9207C03a0fe02
+  Fee Recipient: 0xa32c0203D5F9Fcfe1b2A359e5628cb5a22001bA7
+  NFT contract deployed at: 0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f
+  V1 Market contract deployed at: 0x2e234DAe75C793f67A35089C9d99245E1C58470b
+  V1 Version: 1.0.0
+  V2 Market contract deployed at: 0xF62849F9A0B5Bf2913b396098F7c7019b51A820a
+  V2 Version: 2.0.0
+  NFT minted to seller, tokenId: 1
+  Seller approved both market contracts
+  Buyer funded with 10 ETH
+  
+=== Starting V1 and V2 Compatibility Test ===
+  
+--- Phase 1: Testing V1 Functionality ---
+  [OK] V1 initial state verified
+  
+1.2 Listing NFT on V1...
+  [OK] NFT listed on V1 successfully
+  [OK] Listing ID retrieved: 0xa9fa19b13edb42bd3d519ccc92819059deb0416885856f4774476b419366092b
+  
+1.3 Purchasing NFT on V1...
+  [OK] NFT purchased on V1 successfully
+    - Seller received: 0 ETH
+    - Fee recipient received: 0 ETH
+  
+--- Phase 2: Testing V2 Functionality ---
+  [OK] V2 initial state verified
+  
+2.2 Minting new NFT for V2 testing...
+  [OK] New NFT minted to seller, tokenId: 2
+  
+2.3 Testing V2 signature listing...
+  [OK] Signature created for V2 listing
+  [OK] V2 signature listing successful
+  
+2.4 Testing V2 specific functions...
+  [OK] getSignatureHash function works
+  [OK] isSignatureUsed function works
+  
+2.5 Purchasing NFT on V2...
+  [OK] NFT purchased on V2 successfully
+  
+--- Phase 3: Compatibility Verification ---
+  
+3.1 Testing V1 functions work in V2...
+  [OK] New NFT minted for compatibility test, tokenId: 3
+  [OK] V1 listNFT function works in V2
+  [OK] V1 buyNFT function works in V2
+  
+3.2 Testing management functions...
+  [OK] Pause/Unpause functions work in V2
+  [OK] UpdateMarketParams function works in V2
+  
+=== Compatibility Test Summary ===
+  [OK] V1 functionality tested and working
+  [OK] V2 new features working correctly
+  [OK] V1 functions compatible in V2
+  [OK] All management functions working
+  [OK] Data structures compatible between V1 and V2
+  
+[SUCCESS] Complete compatibility test PASSED!
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 10.61ms (4.49ms CPU time)
+
+Ran 6 test suites in 181.50ms (47.61ms CPU time): 43 tests passed, 10 failed, 0 skipped (53 total tests)
+
+Failing tests:
+Encountered 9 failing tests in test/NFTMarketUpgradeableV2.t.sol:NFTMarketUpgradeableV2Test
+[FAIL: UUPSUnauthorizedCallContext()] test_FullV2Workflow() (gas: 4109015)
+[FAIL: UUPSUnauthorizedCallContext()] test_GetSignatureHash() (gas: 4109016)
+[FAIL: UUPSUnauthorizedCallContext()] test_IsSignatureUsed() (gas: 4109015)
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature() (gas: 4108995)
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_InvalidSignature() (gas: 4109037)
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_PriceOutOfRange() (gas: 4109037)
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_SignatureExpired() (gas: 4108993)
+[FAIL: UUPSUnauthorizedCallContext()] test_ListWithSignature_SignatureReuse() (gas: 4109014)
+[FAIL: UUPSUnauthorizedCallContext()] test_UpgradeToV2() (gas: 4384526)
+
+Encountered 1 failing test in test/UpgradeFlowTest.t.sol:UpgradeFlowTest
+[FAIL: UUPSUnauthorizedCallContext()] test_CompleteUpgradeFlow() (gas: 4542271)
+
+Encountered a total of 10 failing tests, 43 tests succeeded

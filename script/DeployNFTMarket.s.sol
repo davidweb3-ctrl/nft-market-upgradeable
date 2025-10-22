@@ -3,10 +3,11 @@ pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {NFTMarketUpgradeable} from "../src/NFTMarketUpgradeable.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 /**
  * @title DeployNFTMarket
- * @dev 部署 NFTMarketUpgradeable 合约的脚本
+ * @dev 使用UUPS代理模式部署 NFTMarketUpgradeable 合约
  */
 contract DeployNFTMarket is Script {
     // 部署参数
@@ -20,7 +21,7 @@ contract DeployNFTMarket is Script {
         address deployer = vm.addr(deployerPrivateKey);
         address feeRecipient = deployer; // 使用部署者作为手续费接收者
         
-        console.log("Deploying NFTMarketUpgradeable...");
+        console.log("Deploying NFTMarketUpgradeable with UUPS Proxy...");
         console.log("Deployer address:", deployer);
         console.log("Deployer balance:", deployer.balance);
         console.log("Fee recipient:", feeRecipient);
@@ -28,21 +29,32 @@ contract DeployNFTMarket is Script {
         // 开始广播交易
         vm.startBroadcast(deployerPrivateKey);
 
-        // 部署实现合约
-        NFTMarketUpgradeable market = new NFTMarketUpgradeable();
-        
-        // 初始化合约
-        market.initialize(
+        // 1. 部署实现合约
+        NFTMarketUpgradeable implementation = new NFTMarketUpgradeable();
+        console.log("Implementation deployed at:", address(implementation));
+
+        // 2. 准备初始化数据
+        bytes memory initData = abi.encodeWithSelector(
+            NFTMarketUpgradeable.initialize.selector,
             FEE_PERCENTAGE,
             feeRecipient,
             MIN_PRICE,
             MAX_PRICE
         );
 
+        // 3. 部署代理合约
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        console.log("Proxy deployed at:", address(proxy));
+
+        // 4. 通过代理地址创建合约实例
+        NFTMarketUpgradeable market = NFTMarketUpgradeable(address(proxy));
+
         vm.stopBroadcast();
 
         // 输出部署信息
-        console.log("NFTMarketUpgradeable deployed at:", address(market));
+        console.log("=== Deployment Summary ===");
+        console.log("Proxy Address (use this):", address(proxy));
+        console.log("Implementation Address:", address(implementation));
         console.log("Fee Percentage:", market.feePercentage(), "bps");
         console.log("Fee Recipient:", market.feeRecipient());
         console.log("Min Price:", market.minPrice());
@@ -58,5 +70,6 @@ contract DeployNFTMarket is Script {
         require(market.maxPrice() == MAX_PRICE, "Max price not set correctly");
 
         console.log("Deployment verification passed!");
+        console.log("Contract is now upgradeable via UUPS!");
     }
 }

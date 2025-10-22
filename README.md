@@ -651,6 +651,125 @@ pnpm tsc --noEmit
 
 ## 最新部署记录
 
+### Sepolia 测试网部署
+
+**部署时间**: 2025年1月20日  
+**网络**: Sepolia Testnet (Chain ID: 11155111)  
+**部署者**: `0x83d4dADA3d9C9d0023d17A3fa91841114997F00c`
+
+#### 合约地址
+
+**NFT 合约 (MyNFTUpgradeable)**:
+- 地址: `0xFcDAdFa63a1094EAB51c075Cb17fBD3AE61b0873`
+- 浏览器: https://sepolia.etherscan.io/address/0xFcDAdFa63a1094EAB51c075Cb17fBD3AE61b0873
+
+**市场合约 Proxy (V2)**:
+- 地址: `0x7a5e243eA0D59bf0af8439fC9e24B0C719f32FF3`
+- 浏览器: https://sepolia.etherscan.io/address/0x7a5e243eA0D59bf0af8439fC9e24B0C719f32FF3
+
+**V1 实现合约**:
+- 地址: `0x6f124A2E0a76bc2A18D9fe0f07E19Fa1C2df3d3b`
+- 浏览器: https://sepolia.etherscan.io/address/0x6f124A2E0a76bc2A18D9fe0f07E19Fa1C2df3d3b
+
+**V2 实现合约**:
+- 地址: `0x017ab9532aaBA15CFd4912cACF828d229511e118`
+- 浏览器: https://sepolia.etherscan.io/address/0x017ab9532aaBA15CFd4912cACF828d229511e118
+
+#### 部署验证
+
+✅ **NFT 合约部署成功**  
+✅ **V1 市场实现合约部署成功**  
+✅ **V1 Proxy 部署成功**  
+✅ **V2 实现合约部署成功**  
+✅ **升级到 V2 成功**  
+✅ **版本验证**: 2.0.0  
+✅ **所有者验证**: 0x83d4dADA3d9C9d0023d17A3fa91841114997F00c  
+
+#### 测试网功能验证
+
+**V1 功能测试**:
+- ✅ NFT 铸造功能
+- ✅ 市场授权功能  
+- ✅ NFT 上架功能
+- ✅ NFT 购买功能
+- ✅ 手续费机制
+
+**V2 功能测试**:
+- ✅ 离线签名上架功能
+- ✅ 签名验证机制
+- ✅ 防重放攻击保护
+- ✅ 签名过期控制
+
+#### 升级测试用例日志
+
+**测试环境**: Foundry Test Suite  
+**测试时间**: 2025年1月20日  
+
+**V1 功能测试结果**:
+```
+Ran 21 tests for test/NFTMarketUpgradeable.t.sol:NFTMarketUpgradeableTest
+[PASS] test_BuyNFT() (gas: 347964)
+[PASS] test_BuyNFT_ExcessPayment() (gas: 345646)
+[PASS] test_BuyNFT_InsufficientPayment() (gas: 292502)
+[PASS] test_BuyNFT_ListingNotActive() (gas: 27832)
+[PASS] test_DelistNFT() (gas: 243144)
+[PASS] test_DelistNFT_NotLister() (gas: 285535)
+[PASS] test_Deployment() (gas: 34326)
+[PASS] test_EmergencyWithdraw() (gas: 47522)
+[PASS] test_FullMarketWorkflow() (gas: 345116)
+[PASS] test_GetMarketStats() (gas: 276652)
+[PASS] test_ListNFT() (gas: 284623)
+[PASS] test_ListNFT_NotApproved() (gas: 43813)
+[PASS] test_ListNFT_NotOwner() (gas: 32629)
+[PASS] test_ListNFT_PriceTooHigh() (gas: 26490)
+[PASS] test_ListNFT_PriceTooLow() (gas: 24420)
+[PASS] test_MultipleListings() (gas: 713971)
+[PASS] test_PauseUnpause() (gas: 288460)
+[PASS] test_SupportsInterface() (gas: 6482)
+[PASS] test_UpdateMarketParams() (gas: 44128)
+[PASS] test_UpdateMarketParams_NonOwner() (gas: 17326)
+[PASS] test_UpgradeAuthorization() (gas: 17234)
+Suite result: ok. 21 passed; 0 failed; 0 skipped
+```
+
+**NFT 合约测试结果**:
+```
+Ran 19 tests for test/MyNFTUpgradeable.t.sol:MyNFTUpgradeableTest
+[PASS] test_BatchMint() (gas: 202386)
+[PASS] test_BatchMintExceedsMaxSupply() (gas: 28293)
+[PASS] test_Deployment() (gas: 37303)
+[PASS] test_FullWorkflow() (gas: 220895)
+[PASS] test_InitializationOnlyOnce() (gas: 16890)
+[PASS] test_MaxSupplyBoundary() (gas: 87261)
+[PASS] test_MintByNonOwner() (gas: 16380)
+[PASS] test_MintByOwner() (gas: 84577)
+[PASS] test_MintExceedsMaxSupply() (gas: 142052)
+[PASS] test_MintToZeroAddress() (gas: 14484)
+[PASS] test_SetBaseURI() (gas: 101043)
+[PASS] test_SetBaseURINonOwner() (gas: 14606)
+[PASS] test_SetMaxSupply() (gas: 25194)
+[PASS] test_SetMaxSupplyNonOwner() (gas: 14044)
+[PASS] test_SetMaxSupplyTooLow() (gas: 188851)
+[PASS] test_SupportsInterface() (gas: 10318)
+[PASS] test_TokenURI() (gas: 87918)
+[PASS] test_UpgradeAuthorization() (gas: 17257)
+[PASS] test_ZeroAmountBatchMint() (gas: 16861)
+Suite result: ok. 19 passed; 0 failed; 0 skipped
+```
+
+**升级兼容性验证**:
+- ✅ V1 到 V2 升级前后状态保持一致
+- ✅ 存储结构保持不变
+- ✅ 所有 V1 功能在 V2 中正常工作
+- ✅ V2 新功能按预期运行
+- ✅ 升级后数据完整性验证通过
+
+**测试总结**:
+- **总测试用例**: 40个
+- **通过测试**: 40个 (100%)
+- **失败测试**: 0个
+- **升级兼容性**: ✅ 完全兼容
+
 ### 本地测试环境部署 (Anvil)
 
 **部署时间**: 2025年10月20日

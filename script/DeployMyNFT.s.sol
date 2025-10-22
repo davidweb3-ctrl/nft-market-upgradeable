@@ -3,11 +3,10 @@ pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {MyNFTUpgradeable} from "../src/MyNFTUpgradeable.sol";
-import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 /**
  * @title DeployMyNFT
- * @dev 使用UUPS代理模式部署 MyNFTUpgradeable 合约
+ * @dev 部署 MyNFTUpgradeable 合约的脚本
  */
 contract DeployMyNFT is Script {
     // 部署参数
@@ -21,39 +20,28 @@ contract DeployMyNFT is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         address deployer = vm.addr(deployerPrivateKey);
         
-        console.log("Deploying MyNFTUpgradeable with UUPS Proxy...");
+        console.log("Deploying MyNFTUpgradeable...");
         console.log("Deployer address:", deployer);
         console.log("Deployer balance:", deployer.balance);
 
         // 开始广播交易
         vm.startBroadcast(deployerPrivateKey);
 
-        // 1. 部署实现合约
-        MyNFTUpgradeable implementation = new MyNFTUpgradeable();
-        console.log("Implementation deployed at:", address(implementation));
-
-        // 2. 准备初始化数据
-        bytes memory initData = abi.encodeWithSelector(
-            MyNFTUpgradeable.initialize.selector,
+        // 部署实现合约
+        MyNFTUpgradeable nft = new MyNFTUpgradeable();
+        
+        // 初始化合约
+        nft.initialize(
             NFT_NAME,
             NFT_SYMBOL,
             BASE_URI,
             MAX_SUPPLY
         );
 
-        // 3. 部署代理合约
-        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
-        console.log("Proxy deployed at:", address(proxy));
-
-        // 4. 通过代理地址创建合约实例
-        MyNFTUpgradeable nft = MyNFTUpgradeable(address(proxy));
-
         vm.stopBroadcast();
 
         // 输出部署信息
-        console.log("=== Deployment Summary ===");
-        console.log("Proxy Address (use this):", address(proxy));
-        console.log("Implementation Address:", address(implementation));
+        console.log("MyNFTUpgradeable deployed at:", address(nft));
         console.log("NFT Name:", NFT_NAME);
         console.log("NFT Symbol:", NFT_SYMBOL);
         console.log("Base URI:", BASE_URI);
@@ -68,6 +56,5 @@ contract DeployMyNFT is Script {
         require(nft.totalSupply() == 0, "Total supply should be 0 initially");
 
         console.log("Deployment verification passed!");
-        console.log("Contract is now upgradeable via UUPS!");
     }
 }

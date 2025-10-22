@@ -70,3 +70,4 @@ contract SimpleUpgradeTest is Script {
         console.log("V2 Impl:", address(v2Impl));
     }
 }
+

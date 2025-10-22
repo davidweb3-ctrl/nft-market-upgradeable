@@ -73,6 +73,20 @@ export default function ListPage() {
     args: userListings && userListings.length > 3 ? [userListings[3]] : undefined,
   });
 
+  const { data: listing5 } = useReadContract({
+    address: CONTRACT_ADDRESSES.MARKET,
+    abi: MARKET_ABI,
+    functionName: 'getListing',
+    args: userListings && userListings.length > 4 ? [userListings[4]] : undefined,
+  });
+
+  const { data: listing6 } = useReadContract({
+    address: CONTRACT_ADDRESSES.MARKET,
+    abi: MARKET_ABI,
+    functionName: 'getListing',
+    args: userListings && userListings.length > 5 ? [userListings[5]] : undefined,
+  });
+
   // 检查 Token ID 1-5 的所有者
   const { data: ownerOf1 } = useReadContract({
     address: CONTRACT_ADDRESSES.NFT,
@@ -114,6 +128,9 @@ export default function ListPage() {
     hash,
   });
 
+  // 添加强制刷新状态
+  const [refreshKey, setRefreshKey] = useState(0);
+
   // 获取用户拥有的 NFT 列表（包括已上架的）
   useEffect(() => {
     if (!address) return;
@@ -128,7 +145,7 @@ export default function ListPage() {
     if (ownerOf5 && ownerOf5.toLowerCase() === address.toLowerCase()) owned.push(5);
     
     // 2. 检查用户上架记录中的 Token ID（已上架的）
-    const listings = [listing1, listing2, listing3, listing4].filter(Boolean);
+    const listings = [listing1, listing2, listing3, listing4, listing5, listing6].filter(Boolean);
     listings.forEach(listing => {
       if (listing && listing.tokenId && listing.seller.toLowerCase() === address.toLowerCase()) {
         const tokenId = Number(listing.tokenId);
@@ -139,11 +156,21 @@ export default function ListPage() {
     });
     
     setOwnedNFTs(owned);
-  }, [address, ownerOf1, ownerOf2, ownerOf3, ownerOf4, ownerOf5, listing1?.tokenId, listing2?.tokenId, listing3?.tokenId, listing4?.tokenId, listing1?.seller, listing2?.seller, listing3?.seller, listing4?.seller]);
+  }, [address, ownerOf1, ownerOf2, ownerOf3, ownerOf4, ownerOf5, listing1?.tokenId, listing2?.tokenId, listing3?.tokenId, listing4?.tokenId, listing5?.tokenId, listing6?.tokenId, listing1?.seller, listing2?.seller, listing3?.seller, listing4?.seller, listing5?.seller, listing6?.seller, refreshKey]);
+
+  // 上架成功后刷新状态
+  useEffect(() => {
+    if (isConfirmed) {
+      // 延迟刷新以确保合约状态已更新
+      setTimeout(() => {
+        setRefreshKey(prev => prev + 1);
+      }, 1000);
+    }
+  }, [isConfirmed]);
 
   // 检查特定 Token ID 是否已上架
   const isTokenListed = (tokenId: number) => {
-    const listings = [listing1, listing2, listing3, listing4].filter(Boolean);
+    const listings = [listing1, listing2, listing3, listing4, listing5, listing6].filter(Boolean);
     return listings.some(listing => 
       listing && 
       Number(listing.tokenId) === tokenId && 
@@ -155,7 +182,9 @@ export default function ListPage() {
   // 动态确定当前步骤
   const getCurrentStep = () => {
     if (!address) return 0;
-    if (!hasNFT) return 1; // 需要铸造 NFT
+    // 作为合约拥有者，始终可以铸造NFT
+    // 但优先显示用户最需要的步骤
+    if (ownedNFTs.length === 0) return 1; // 需要铸造 NFT
     if (!isApproved) return 2; // 需要授权
     return 3; // 可以上架
   };
@@ -290,16 +319,16 @@ export default function ListPage() {
               <h2 className="text-xl font-semibold text-gray-900 ml-3">Mint NFT</h2>
             </div>
             <p className="text-gray-600 mb-4">
-              First, you need to mint an NFT to list on the marketplace.
+              As the contract owner, you can mint new NFTs to add to your collection.
             </p>
             <button
               onClick={handleMint}
-              disabled={isPending || isConfirming || currentStep > 1}
+              disabled={isPending || isConfirming}
               className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isPending ? 'Minting...' : isConfirming ? 'Confirming...' : 'Mint NFT'}
             </button>
-            {isConfirmed && currentStep === 1 && (
+            {isConfirmed && (
               <div className="mt-2 text-green-600 text-sm">
                 ✅ NFT minted successfully!
               </div>

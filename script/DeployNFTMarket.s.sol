@@ -17,7 +17,7 @@ contract DeployNFTMarket is Script {
 
     function run() external {
         // 获取部署者私钥
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        uint256 deployerPrivateKey = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
         address deployer = vm.addr(deployerPrivateKey);
         address feeRecipient = deployer; // 使用部署者作为手续费接收者
         

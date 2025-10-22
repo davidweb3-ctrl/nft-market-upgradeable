@@ -30,6 +30,22 @@ export default function SignatureListPage() {
 
   const { signMessageAsync, isPending: isSigning } = useSignMessage();
 
+  // 生成智能nonce（基于时间戳 + 随机数）
+  const generateNonce = () => {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const randomPart = Math.floor(Math.random() * 10000);
+    // 使用更合理的nonce生成方式：时间戳后6位 + 随机数
+    const smartNonce = (timestamp % 1000000) * 10000 + randomPart;
+    setNonce(smartNonce.toString());
+  };
+
+  // 生成当前时间戳作为deadline（24小时后）
+  const generateDeadline = () => {
+    const currentTime = Math.floor(Date.now() / 1000);
+    const deadline = currentTime + (24 * 60 * 60); // 24小时后
+    setDeadline(deadline.toString());
+  };
+
   // 动态确定当前步骤
   const getCurrentStep = () => {
     if (!address) return 0;
@@ -53,6 +69,20 @@ export default function SignatureListPage() {
     }
   };
 
+  // 使用 useReadContract 来获取签名哈希
+  const { data: contractSignatureHash, refetch: refetchSignatureHash } = useReadContract({
+    address: CONTRACT_ADDRESSES.MARKET,
+    abi: MARKET_ABI,
+    functionName: 'getSignatureHash',
+    args: tokenId && price && nonce && deadline ? [
+      CONTRACT_ADDRESSES.NFT,
+      BigInt(tokenId),
+      parseEther(price),
+      BigInt(nonce),
+      BigInt(deadline)
+    ] : undefined,
+  });
+
   const handleGetSignatureHash = async () => {
     if (!tokenId || !price || !nonce || !deadline) {
       alert('Please fill in all fields first');
@@ -60,11 +90,11 @@ export default function SignatureListPage() {
     }
 
     try {
-      // 这里应该调用合约的 getSignatureHash 函数
-      // 由于我们没有实际的合约调用，我们使用一个模拟的哈希
-      const message = `List NFT: Token ID ${tokenId}, Price ${price} ETH, Nonce ${nonce}, Deadline ${deadline}`;
-      const hash = hashMessage(message);
-      setSignatureHash(hash);
+      // 触发合约调用
+      const result = await refetchSignatureHash();
+      if (result.data) {
+        setSignatureHash(result.data);
+      }
     } catch (error) {
       console.error('Error getting signature hash:', error);
     }
@@ -77,8 +107,9 @@ export default function SignatureListPage() {
     }
 
     try {
+      // 对原始哈希进行签名
       const sig = await signMessageAsync({
-        message: signatureHash,
+        message: { raw: signatureHash as `0x${string}` },
       });
       setSignature(sig);
     } catch (error) {
@@ -197,26 +228,50 @@ export default function SignatureListPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Nonce
                   </label>
-                  <input
-                    type="number"
-                    value={nonce}
-                    onChange={(e) => setNonce(e.target.value)}
-                    placeholder="Enter nonce"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white placeholder-gray-500"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={nonce}
+                      onChange={(e) => setNonce(e.target.value)}
+                      placeholder="Enter nonce"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white placeholder-gray-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={generateNonce}
+                      className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                    >
+                      Generate
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">
+                    💡 Nonce用于防止重放攻击，每次使用不同的值
+                  </p>
                 </div>
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Deadline (Unix timestamp)
                   </label>
-                  <input
-                    type="number"
-                    value={deadline}
-                    onChange={(e) => setDeadline(e.target.value)}
-                    placeholder="Enter deadline"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white placeholder-gray-500"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      value={deadline}
+                      onChange={(e) => setDeadline(e.target.value)}
+                      placeholder="Enter deadline"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white placeholder-gray-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={generateDeadline}
+                      className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    >
+                      +24h
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-gray-500">
+                    💡 设置签名有效期，建议24小时后过期
+                  </p>
                 </div>
               </div>
               

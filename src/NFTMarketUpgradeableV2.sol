@@ -179,7 +179,7 @@ contract NFTMarketUpgradeableV2 is NFTMarketUpgradeable {
             deadline,
             address(this)
         ));
-        return messageHash.toEthSignedMessageHash();
+        return messageHash; // 返回原始哈希，不添加以太坊前缀
     }
 
     /**

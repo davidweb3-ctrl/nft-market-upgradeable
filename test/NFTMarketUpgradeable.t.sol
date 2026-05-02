@@ -5,6 +5,7 @@ import {Test, console} from "forge-std/Test.sol";
 import {MyNFTUpgradeable} from "../src/MyNFTUpgradeable.sol";
 import {NFTMarketUpgradeable} from "../src/NFTMarketUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 /**
  * @title NFTMarketUpgradeableTest
@@ -61,15 +62,8 @@ contract NFTMarketUpgradeableTest is Test {
         buyer = makeAddr("buyer");
         feeRecipient = makeAddr("feeRecipient");
         
-        // 部署 NFT 合约
-        nft = new MyNFTUpgradeable();
-        vm.prank(owner);
-        nft.initialize("Test NFT", "TNFT", "https://test.com/", 10000);
-        
-        // 部署市场合约
-        market = new NFTMarketUpgradeable();
-        vm.prank(owner);
-        market.initialize(FEE_PERCENTAGE, feeRecipient, MIN_PRICE, MAX_PRICE);
+        nft = _deployNFTProxy();
+        market = _deployMarketProxy();
         
         // 铸造 NFT 给卖家
         vm.prank(owner);
@@ -81,6 +75,36 @@ contract NFTMarketUpgradeableTest is Test {
         
         // 给买家一些 ETH
         vm.deal(buyer, 10 ether);
+    }
+
+    function _deployNFTProxy() internal returns (MyNFTUpgradeable) {
+        MyNFTUpgradeable implementation = new MyNFTUpgradeable();
+        bytes memory initData = abi.encodeWithSelector(
+            MyNFTUpgradeable.initialize.selector,
+            "Test NFT",
+            "TNFT",
+            "https://test.com/",
+            10000
+        );
+
+        vm.prank(owner);
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        return MyNFTUpgradeable(address(proxy));
+    }
+
+    function _deployMarketProxy() internal returns (NFTMarketUpgradeable) {
+        NFTMarketUpgradeable implementation = new NFTMarketUpgradeable();
+        bytes memory initData = abi.encodeWithSelector(
+            NFTMarketUpgradeable.initialize.selector,
+            FEE_PERCENTAGE,
+            feeRecipient,
+            MIN_PRICE,
+            MAX_PRICE
+        );
+
+        vm.prank(owner);
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        return NFTMarketUpgradeable(address(proxy));
     }
 
     // ============ 部署测试 ============

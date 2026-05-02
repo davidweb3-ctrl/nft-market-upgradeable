@@ -34,9 +34,18 @@ contract DeployToSepolia is Script {
 
         // 1. 部署NFT合约
         console.log("\n1. Deploying MyNFTUpgradeable...");
-        MyNFTUpgradeable nft = new MyNFTUpgradeable();
-        nft.initialize(NFT_NAME, NFT_SYMBOL, BASE_URI, MAX_SUPPLY);
-        console.log("NFT Contract:", address(nft));
+        MyNFTUpgradeable nftImpl = new MyNFTUpgradeable();
+        bytes memory nftInitData = abi.encodeWithSelector(
+            MyNFTUpgradeable.initialize.selector,
+            NFT_NAME,
+            NFT_SYMBOL,
+            BASE_URI,
+            MAX_SUPPLY
+        );
+        ERC1967Proxy nftProxy = new ERC1967Proxy(address(nftImpl), nftInitData);
+        MyNFTUpgradeable nft = MyNFTUpgradeable(address(nftProxy));
+        console.log("NFT Proxy:", address(nftProxy));
+        console.log("NFT Implementation:", address(nftImpl));
 
         // 2. 部署V1市场实现合约
         console.log("\n2. Deploying V1 Implementation...");
@@ -69,7 +78,7 @@ contract DeployToSepolia is Script {
         
         // 7. 验证部署
         console.log("\n6. Deployment Complete!");
-        console.log("NFT Contract:", address(nft));
+        console.log("NFT Proxy:", address(nft));
         console.log("Market Proxy (V2):", address(v1Proxy));
         console.log("V1 Implementation:", address(v1Impl));
         console.log("V2 Implementation:", address(v2Impl));

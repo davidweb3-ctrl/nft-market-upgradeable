@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {MyNFTUpgradeable} from "../src/MyNFTUpgradeable.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 /**
  * @title DeployMyNFT
@@ -28,20 +29,24 @@ contract DeployMyNFT is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // 部署实现合约
-        MyNFTUpgradeable nft = new MyNFTUpgradeable();
-        
-        // 初始化合约
-        nft.initialize(
+        MyNFTUpgradeable implementation = new MyNFTUpgradeable();
+
+        // 通过代理初始化合约
+        bytes memory initData = abi.encodeWithSelector(
+            MyNFTUpgradeable.initialize.selector,
             NFT_NAME,
             NFT_SYMBOL,
             BASE_URI,
             MAX_SUPPLY
         );
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        MyNFTUpgradeable nft = MyNFTUpgradeable(address(proxy));
 
         vm.stopBroadcast();
 
         // 输出部署信息
-        console.log("MyNFTUpgradeable deployed at:", address(nft));
+        console.log("MyNFTUpgradeable proxy deployed at:", address(nft));
+        console.log("MyNFTUpgradeable implementation deployed at:", address(implementation));
         console.log("NFT Name:", NFT_NAME);
         console.log("NFT Symbol:", NFT_SYMBOL);
         console.log("Base URI:", BASE_URI);

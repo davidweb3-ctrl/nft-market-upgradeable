@@ -37,7 +37,7 @@ contract MyNFTUpgradeable is
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
-        // _disableInitializers(); // 在测试环境中注释掉
+        _disableInitializers();
     }
 
     /**

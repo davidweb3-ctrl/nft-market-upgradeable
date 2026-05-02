@@ -2,7 +2,9 @@
 pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
+import {NFTMarketUpgradeable} from "../src/NFTMarketUpgradeable.sol";
 import {NFTMarketUpgradeableV2} from "../src/NFTMarketUpgradeableV2.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 /**
  * @title TestDeployMarketV2
@@ -23,20 +25,24 @@ contract TestDeployMarketV2 is Script {
         vm.startBroadcast(deployerPrivateKey);
 
         // 部署 V2 实现合约
-        NFTMarketUpgradeableV2 marketV2 = new NFTMarketUpgradeableV2();
-        
-        // 初始化合约
-        marketV2.initialize(
+        NFTMarketUpgradeableV2 implementation = new NFTMarketUpgradeableV2();
+
+        // 通过代理初始化合约
+        bytes memory initData = abi.encodeWithSelector(
+            NFTMarketUpgradeable.initialize.selector,
             250, // 2.5% fee
             feeRecipient,
             0.001 ether, // min price
             100 ether    // max price
         );
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        NFTMarketUpgradeableV2 marketV2 = NFTMarketUpgradeableV2(address(proxy));
 
         vm.stopBroadcast();
 
         // 输出部署信息
-        console.log("NFTMarketUpgradeableV2 deployed at:", address(marketV2));
+        console.log("NFTMarketUpgradeableV2 proxy deployed at:", address(marketV2));
+        console.log("NFTMarketUpgradeableV2 implementation deployed at:", address(implementation));
         console.log("Fee Percentage:", marketV2.feePercentage(), "bps");
         console.log("Fee Recipient:", marketV2.feeRecipient());
         console.log("Min Price:", marketV2.minPrice());

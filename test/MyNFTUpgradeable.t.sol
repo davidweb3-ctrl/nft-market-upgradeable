@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
 import {MyNFTUpgradeable} from "../src/MyNFTUpgradeable.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 /**
  * @title MyNFTUpgradeableTest
@@ -32,12 +33,18 @@ contract MyNFTUpgradeableTest is Test {
         user1 = makeAddr("user1");
         user2 = makeAddr("user2");
         
-        // 部署合约
-        nft = new MyNFTUpgradeable();
-        
-        // 初始化合约（使用 owner 作为 msg.sender）
+        MyNFTUpgradeable implementation = new MyNFTUpgradeable();
+        bytes memory initData = abi.encodeWithSelector(
+            MyNFTUpgradeable.initialize.selector,
+            NFT_NAME,
+            NFT_SYMBOL,
+            BASE_URI,
+            MAX_SUPPLY
+        );
+
         vm.prank(owner);
-        nft.initialize(NFT_NAME, NFT_SYMBOL, BASE_URI, MAX_SUPPLY);
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        nft = MyNFTUpgradeable(address(proxy));
     }
 
     // ============ 部署测试 ============

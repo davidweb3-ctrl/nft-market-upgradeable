@@ -6,6 +6,7 @@ import {MyNFTUpgradeable} from "../src/MyNFTUpgradeable.sol";
 import {NFTMarketUpgradeable} from "../src/NFTMarketUpgradeable.sol";
 import {NFTMarketUpgradeableV2} from "../src/NFTMarketUpgradeableV2.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ERC1967Proxy} from "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 
 /**
  * @title NFTMarketUpgradeableV2Test
@@ -43,25 +44,18 @@ contract NFTMarketUpgradeableV2Test is Test {
     );
 
     function setUp() public {
-        // 设置测试地址
-        owner = makeAddr("owner");
-        seller = makeAddr("seller");
-        buyer = makeAddr("buyer");
-        feeRecipient = makeAddr("feeRecipient");
-        
         // 设置私钥
         sellerPrivateKey = 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d;
         nonOwnerPrivateKey = 0x47e179ec197488593b187f80a5eb0fce6d0c8e4d7177c0e51a2310d0409b804f;
-        
-        // 部署 NFT 合约
-        nft = new MyNFTUpgradeable();
-        vm.prank(owner);
-        nft.initialize("Test NFT", "TNFT", "https://test.com/", 10000);
-        
-        // 部署 V1 市场合约
-        marketV1 = new NFTMarketUpgradeable();
-        vm.prank(owner);
-        marketV1.initialize(FEE_PERCENTAGE, feeRecipient, MIN_PRICE, MAX_PRICE);
+
+        // 设置测试地址
+        owner = makeAddr("owner");
+        seller = vm.addr(sellerPrivateKey);
+        buyer = makeAddr("buyer");
+        feeRecipient = makeAddr("feeRecipient");
+
+        nft = _deployNFTProxy();
+        marketV1 = _deployMarketProxy();
         
         // 铸造 NFT 给卖家
         vm.prank(owner);
@@ -75,6 +69,46 @@ contract NFTMarketUpgradeableV2Test is Test {
         vm.deal(buyer, 10 ether);
     }
 
+    function _deployNFTProxy() internal returns (MyNFTUpgradeable) {
+        MyNFTUpgradeable implementation = new MyNFTUpgradeable();
+        bytes memory initData = abi.encodeWithSelector(
+            MyNFTUpgradeable.initialize.selector,
+            "Test NFT",
+            "TNFT",
+            "https://test.com/",
+            10000
+        );
+
+        vm.prank(owner);
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        return MyNFTUpgradeable(address(proxy));
+    }
+
+    function _deployMarketProxy() internal returns (NFTMarketUpgradeable) {
+        NFTMarketUpgradeable implementation = new NFTMarketUpgradeable();
+        bytes memory initData = abi.encodeWithSelector(
+            NFTMarketUpgradeable.initialize.selector,
+            FEE_PERCENTAGE,
+            feeRecipient,
+            MIN_PRICE,
+            MAX_PRICE
+        );
+
+        vm.prank(owner);
+        ERC1967Proxy proxy = new ERC1967Proxy(address(implementation), initData);
+        return NFTMarketUpgradeable(address(proxy));
+    }
+
+    function _upgradeToV2() internal returns (NFTMarketUpgradeableV2) {
+        NFTMarketUpgradeableV2 implementation = new NFTMarketUpgradeableV2();
+
+        vm.prank(owner);
+        marketV1.upgradeToAndCall(address(implementation), "");
+
+        marketV2 = NFTMarketUpgradeableV2(address(marketV1));
+        return marketV2;
+    }
+
     // ============ 升级测试 ============
 
     function test_UpgradeToV2() public {
@@ -85,12 +119,7 @@ contract NFTMarketUpgradeableV2Test is Test {
         // 验证 V1 状态
         assertEq(marketV1.activeListingsCount(), 1, "V1 should have 1 active listing");
         
-        // 部署 V2 合约
-        marketV2 = new NFTMarketUpgradeableV2();
-        
-        // 升级到 V2
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         // 验证升级后的合约
         assertEq(marketV1.version(), "2.0.0", "Version should be 2.0.0");
@@ -113,9 +142,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_ListWithSignature() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = NFT_PRICE;
@@ -154,9 +181,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_ListWithSignature_InvalidSignature() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = NFT_PRICE;
@@ -188,9 +213,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_ListWithSignature_SignatureExpired() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = NFT_PRICE;
@@ -222,9 +245,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_ListWithSignature_SignatureReuse() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = NFT_PRICE;
@@ -271,9 +292,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_ListWithSignature_PriceOutOfRange() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = MIN_PRICE - 1; // 价格过低
@@ -307,9 +326,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_GetSignatureHash() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = NFT_PRICE;
@@ -331,9 +348,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_IsSignatureUsed() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = NFT_PRICE;
@@ -372,9 +387,7 @@ contract NFTMarketUpgradeableV2Test is Test {
 
     function test_FullV2Workflow() public {
         // 升级到 V2
-        marketV2 = new NFTMarketUpgradeableV2();
-        vm.prank(owner);
-        marketV1.upgradeToAndCall(address(marketV2), "");
+        marketV2 = _upgradeToV2();
         
         uint256 tokenId = 1;
         uint256 price = NFT_PRICE;
